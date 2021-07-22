@@ -1,5 +1,6 @@
 class Authenticate {
 	constructor() {
+		this._localStorage = window.localStorage;
 		this._passwordBox = document.querySelector('#input-password-box');
 		this._passwordInput = document.querySelector('#input-password');
 		this._buttonAuthenticate = document.querySelector('#button-authenticate');
@@ -23,7 +24,12 @@ class Authenticate {
 			'You father is right. You are a disappointment...',
 			'PAM will lock you out...'
 		];
-		return errorMessages[Math.floor(Math.random() * errorMessages.length)];	
+		const randomMsg = JSON.parse(this._localStorage.getItem('randomMsg')) || false;
+		if (randomMsg) {
+			return errorMessages[Math.floor(Math.random() * errorMessages.length)];
+		} else {
+			return errorMessages[0];
+		}
 	}
 
 	_returnRandomSuccessfulMessages() {
@@ -38,7 +44,12 @@ class Authenticate {
 			'Finally, someone with a good amount of IQ!',
 			'Please, don\'t watch porn.'
 		];
-		return errorMessages[Math.floor(Math.random() * errorMessages.length)];
+		const randomMsg = JSON.parse(this._localStorage.getItem('randomMsg')) || false;
+		if (randomMsg) {
+			return errorMessages[Math.floor(Math.random() * errorMessages.length)];
+		} else {
+			return errorMessages[0];
+		}
 	}
 
 	// Start authentication

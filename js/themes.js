@@ -12,6 +12,9 @@ class Themes {
 
 		this._inputBlurStrength = document.querySelector('#sidebar-settings-blur-input');
 		this._inputAnimSpeed = document.querySelector('#sidebar-settings-animation-input');
+
+		this._inputGreeter = document.querySelector('#sidebar-settings-greeter-input');
+		this._inputRandomMsg = document.querySelector('#sidebar-settings-messages-input');
 		this._init();
 	}
 
@@ -47,7 +50,7 @@ class Themes {
 			'background': backgroundColor,
 			'foreground': foregroundColor,
 			'blurPower': blurStrength,
-			'animSpeed': transitionSpeed 
+			'animSpeed': transitionSpeed
 		};
 		return inputFieldValues;
 	}
@@ -124,8 +127,14 @@ class Themes {
 		this._processCurrentCSSValues();
 	}
 
+	_updateToggleVariables() {
+		this._localStorage.setItem('autoHideGreeter', JSON.stringify(this._inputGreeter.checked));
+		this._localStorage.setItem('randomMsg', JSON.stringify(this._inputRandomMsg.checked));
+	}
+
 	_settingsThemeApply() {
 		this._updateCSSVariables();
+		this._updateToggleVariables();
 	}
 
 	_settingsThemeReset() {
@@ -133,6 +142,8 @@ class Themes {
 		this._localStorage.removeItem('baseColor');
 		this._localStorage.removeItem('blurStrength');
 		this._localStorage.removeItem('animSpeed');
+		this._localStorage.removeItem('autoHideGreeter');
+		this._localStorage.removeItem('randomMsg');
 		this._saveOriginalDefaultCSS();
 	}
 
@@ -290,6 +301,13 @@ class Themes {
 		document.documentElement.style.setProperty('--global-animation-speed', animSpeed);
 	}
 
+	_processCurrentToggleValues() {
+		const autoHideGreeter = JSON.parse(this._getStorageItem('autoHideGreeter')) || false;
+		const randomMsg = JSON.parse(this._getStorageItem('randomMsg')) || false;
+		this._inputGreeter.checked = autoHideGreeter;
+		this._inputRandomMsg.checked = randomMsg;
+	}
+
 	_reApplyTheme() {
 		this._updateCSSColors(
 			this._getStorageItem('baseBG') || this._getStorageItem('origBaseBG'),
@@ -298,6 +316,7 @@ class Themes {
 			this._getStorageItem('animSpeed') || this._getStorageItem('origAnimSpeed')
 		);
 		this._processCurrentCSSValues();
+		this._processCurrentToggleValues();
 	}
 
 	_saveOriginalDefaultCSS() {
